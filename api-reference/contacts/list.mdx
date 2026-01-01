@@ -1,0 +1,154 @@
+---
+title: 'List Contacts'
+description: 'Retrieve a paginated list of contacts'
+---
+
+## Query
+
+```graphql
+query {
+  contactItems(
+    apiKey: String!
+    skip: Int
+    take: Int
+    search: String
+  ): ContactItemList!
+}
+```
+
+## Parameters
+
+<ParamField query="apiKey" type="string" required>
+  Your Tellscope API key
+</ParamField>
+
+<ParamField query="skip" type="integer" default="0">
+  Number of items to skip for pagination
+</ParamField>
+
+<ParamField query="take" type="integer" default="50">
+  Number of items to return (max 100)
+</ParamField>
+
+<ParamField query="search" type="string">
+  Search term to filter contacts by name, email, or company
+</ParamField>
+
+## Response
+
+<ResponseField name="items" type="array">
+  Array of contact items
+  <Expandable title="ContactItem">
+    <ResponseField name="id" type="string">Unique identifier</ResponseField>
+    <ResponseField name="name" type="string">Contact name</ResponseField>
+    <ResponseField name="email" type="string">Email address</ResponseField>
+    <ResponseField name="phone" type="string">Phone number</ResponseField>
+    <ResponseField name="company" type="string">Company name</ResponseField>
+    <ResponseField name="title" type="string">Job title</ResponseField>
+    <ResponseField name="location" type="string">Location</ResponseField>
+    <ResponseField name="tags" type="array">Array of tags</ResponseField>
+    <ResponseField name="totalFeedbacks" type="integer">Number of feedback items from this contact</ResponseField>
+    <ResponseField name="lastInteraction" type="datetime">Last interaction date</ResponseField>
+    <ResponseField name="createdAt" type="datetime">Record creation date</ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="total" type="integer">
+  Total count of matching contacts
+</ResponseField>
+
+## Example
+
+<CodeGroup>
+```graphql Query
+query {
+  contactItems(
+    apiKey: "tellscp_sk_YOUR_API_KEY"
+    take: 20
+    search: "acme"
+  ) {
+    items {
+      id
+      name
+      email
+      company
+      title
+      totalFeedbacks
+      lastInteraction
+    }
+    total
+  }
+}
+```
+
+```json Response
+{
+  "data": {
+    "contactItems": {
+      "items": [
+        {
+          "id": "cnt_abc123",
+          "name": "John Smith",
+          "email": "john@acme.com",
+          "company": "Acme Corp",
+          "title": "Product Manager",
+          "totalFeedbacks": 12,
+          "lastInteraction": "2024-01-18T15:30:00Z"
+        },
+        {
+          "id": "cnt_def456",
+          "name": "Sarah Johnson",
+          "email": "sarah@acme.com",
+          "company": "Acme Corp",
+          "title": "CTO",
+          "totalFeedbacks": 5,
+          "lastInteraction": "2024-01-10T09:00:00Z"
+        }
+      ],
+      "total": 2
+    }
+  }
+}
+```
+</CodeGroup>
+
+<CodeGroup>
+```bash cURL
+curl -X POST https://api.tellscope.io/graphql \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "query { contactItems(apiKey: \"tellscp_sk_YOUR_API_KEY\", take: 20, search: \"acme\") { items { id name email company } total } }"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.tellscope.io/graphql', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    query: `
+      query {
+        contactItems(
+          apiKey: "${process.env.TELLSCOPE_API_KEY}"
+          take: 20
+          search: "acme"
+        ) {
+          items {
+            id
+            name
+            email
+            company
+            totalFeedbacks
+          }
+          total
+        }
+      }
+    `
+  })
+});
+```
+</CodeGroup>
+
+<Note>
+  Contacts are read-only via the public API. To create or update contacts, use the Tellscope dashboard or integrations.
+</Note>

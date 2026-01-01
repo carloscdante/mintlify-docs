@@ -1,33 +1,96 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'Overview of the Tellscope GraphQL API'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+## API Overview
 
-## Welcome
+The Tellscope API is built on GraphQL, giving you the flexibility to request exactly the data you need. All requests are made to a single endpoint:
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+```
+POST https://api.tellscope.io/graphql
+```
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+## Available Operations
 
-## Authentication
+### Queries (Read)
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+| Operation | Description |
+|-----------|-------------|
+| `feedbackItems` | List feedback with filters and pagination |
+| `feedbackItem` | Get a single feedback by ID |
+| `contactItems` | List contacts with search and pagination |
+| `contactItem` | Get a single contact by ID |
+| `accountItems` | List accounts with search and pagination |
+| `accountItem` | Get a single account by ID |
+
+### Mutations (Write)
+
+| Operation | Description |
+|-----------|-------------|
+| `addFeedbackItem` | Create new feedback |
+| `removeFeedbackItem` | Delete feedback by ID |
+
+## Request Format
+
+All requests must be `POST` requests with a JSON body containing:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "query": "your GraphQL query or mutation",
+  "variables": { }  // optional
+}
 ```
+
+## Response Format
+
+Responses follow the standard GraphQL format:
+
+```json
+{
+  "data": {
+    // your requested data
+  },
+  "errors": [
+    // any errors that occurred
+  ]
+}
+```
+
+## Rate Limits
+
+| Tier | Requests per minute |
+|------|---------------------|
+| Free | 60 |
+| Pro | 300 |
+| Enterprise | Unlimited |
+
+<Note>
+  Rate limits are applied per API key. Contact support if you need higher limits.
+</Note>
+
+## Error Handling
+
+The API returns standard GraphQL errors:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Invalid API key",
+      "extensions": {
+        "code": "UNAUTHENTICATED"
+      }
+    }
+  ]
+}
+```
+
+Common error codes:
+
+| Code | Description |
+|------|-------------|
+| `UNAUTHENTICATED` | Invalid or missing API key |
+| `FORBIDDEN` | Valid key but no access to resource |
+| `NOT_FOUND` | Resource does not exist |
+| `BAD_REQUEST` | Invalid query or parameters |

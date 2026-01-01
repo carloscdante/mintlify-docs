@@ -1,0 +1,116 @@
+---
+title: 'Get Feedback'
+description: 'Retrieve a single feedback item by ID'
+---
+
+## Query
+
+```graphql
+query {
+  feedbackItem(
+    apiKey: String!
+    id: String!
+  ): FeedbackItem
+}
+```
+
+## Parameters
+
+<ParamField query="apiKey" type="string" required>
+  Your Tellscope API key
+</ParamField>
+
+<ParamField query="id" type="string" required>
+  The unique identifier of the feedback item
+</ParamField>
+
+## Response
+
+Returns a single `FeedbackItem` or `null` if not found.
+
+<ResponseField name="id" type="string">Unique identifier</ResponseField>
+<ResponseField name="source" type="string">Source platform (e.g., zendesk, intercom)</ResponseField>
+<ResponseField name="title" type="string">Feedback title</ResponseField>
+<ResponseField name="content" type="string">Full feedback content</ResponseField>
+<ResponseField name="author" type="string">Author name</ResponseField>
+<ResponseField name="email" type="string">Author email address</ResponseField>
+<ResponseField name="sentiment" type="string">Detected sentiment (positive, neutral, negative)</ResponseField>
+<ResponseField name="status" type="string">Current status (unread, read, archived)</ResponseField>
+<ResponseField name="metadata" type="object">Additional metadata from source</ResponseField>
+<ResponseField name="publishedDate" type="datetime">Original publication date</ResponseField>
+<ResponseField name="createdAt" type="datetime">Record creation timestamp</ResponseField>
+
+## Example
+
+<CodeGroup>
+```graphql Query
+query {
+  feedbackItem(
+    apiKey: "tellscp_sk_YOUR_API_KEY"
+    id: "clx789ghi"
+  ) {
+    id
+    title
+    content
+    author
+    email
+    sentiment
+    source
+    status
+    metadata
+    publishedDate
+    createdAt
+  }
+}
+```
+
+```json Response
+{
+  "data": {
+    "feedbackItem": {
+      "id": "clx789ghi",
+      "title": "Great customer support",
+      "content": "I had an issue with my account and the support team resolved it within minutes. Very impressed!",
+      "author": "Jane Smith",
+      "email": "jane@example.com",
+      "sentiment": "positive",
+      "source": "intercom",
+      "status": "read",
+      "metadata": {
+        "rating": 5,
+        "conversationId": "conv_123"
+      },
+      "publishedDate": "2024-01-15T14:22:00Z",
+      "createdAt": "2024-01-15T14:25:00Z"
+    }
+  }
+}
+```
+</CodeGroup>
+
+## Error Responses
+
+If the feedback doesn't exist or you don't have access:
+
+```json
+{
+  "data": {
+    "feedbackItem": null
+  }
+}
+```
+
+If accessing feedback from another organization:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Not authorized to access this feedback",
+      "extensions": {
+        "code": "FORBIDDEN"
+      }
+    }
+  ]
+}
+```

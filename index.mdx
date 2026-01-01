@@ -1,97 +1,53 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: 'Tellscope API Documentation'
+description: 'Integrate customer feedback data into your applications'
 ---
 
-## Setting up
+## Welcome to Tellscope
 
-Get your documentation site up and running in minutes.
+Tellscope is a customer feedback analytics platform that aggregates, analyzes, and helps you act on feedback from multiple sources. Our API allows you to programmatically access your feedback data, contacts, and accounts.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Quickstart Tutorial" icon="rocket" href="/quickstart">
+    Build your first integration in 10 minutes
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Explore all available endpoints
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## What can you do with the API?
 
-Everything you need to create world-class documentation.
+<CardGroup cols={2}>
+  <Card title="Feedback" icon="comments">
+    Create, read, and delete customer feedback programmatically
+  </Card>
+  <Card title="Contacts" icon="users">
+    Access your customer contact database
+  </Card>
+  <Card title="Accounts" icon="building">
+    Retrieve account and company information
+  </Card>
+  <Card title="Integrate" icon="plug">
+    Build custom integrations with your tools
+  </Card>
+</CardGroup>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Authentication
 
-## Need inspiration?
+All API requests require an API key. You can generate and manage your API key from the [Tellscope Dashboard](https://app.tellscope.io/settings).
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+```graphql
+query {
+  feedbackItems(apiKey: "tellscp_sk_...") {
+    items {
+      id
+      title
+    }
+  }
+}
+```
+
+<Note>
+  Keep your API key secure. Never expose it in client-side code or public repositories.
+</Note>

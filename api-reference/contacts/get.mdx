@@ -1,0 +1,115 @@
+---
+title: 'Get Contact'
+description: 'Retrieve a single contact by ID'
+---
+
+## Query
+
+```graphql
+query {
+  contactItem(
+    apiKey: String!
+    id: String!
+  ): ContactItem
+}
+```
+
+## Parameters
+
+<ParamField query="apiKey" type="string" required>
+  Your Tellscope API key
+</ParamField>
+
+<ParamField query="id" type="string" required>
+  The unique identifier of the contact
+</ParamField>
+
+## Response
+
+Returns a single `ContactItem` or `null` if not found.
+
+<ResponseField name="id" type="string">Unique identifier</ResponseField>
+<ResponseField name="name" type="string">Full name of the contact</ResponseField>
+<ResponseField name="email" type="string">Email address</ResponseField>
+<ResponseField name="phone" type="string">Phone number</ResponseField>
+<ResponseField name="company" type="string">Company or organization name</ResponseField>
+<ResponseField name="title" type="string">Job title or role</ResponseField>
+<ResponseField name="location" type="string">Geographic location</ResponseField>
+<ResponseField name="tags" type="array">Tags assigned to this contact</ResponseField>
+<ResponseField name="totalFeedbacks" type="integer">Total number of feedback items from this contact</ResponseField>
+<ResponseField name="lastInteraction" type="datetime">Date of most recent interaction</ResponseField>
+<ResponseField name="createdAt" type="datetime">When the contact was added</ResponseField>
+
+## Example
+
+<CodeGroup>
+```graphql Query
+query {
+  contactItem(
+    apiKey: "tellscp_sk_YOUR_API_KEY"
+    id: "cnt_abc123"
+  ) {
+    id
+    name
+    email
+    phone
+    company
+    title
+    location
+    tags
+    totalFeedbacks
+    lastInteraction
+    createdAt
+  }
+}
+```
+
+```json Response
+{
+  "data": {
+    "contactItem": {
+      "id": "cnt_abc123",
+      "name": "John Smith",
+      "email": "john@acme.com",
+      "phone": "+1 (555) 123-4567",
+      "company": "Acme Corp",
+      "title": "Product Manager",
+      "location": "San Francisco, CA",
+      "tags": ["enterprise", "active", "champion"],
+      "totalFeedbacks": 12,
+      "lastInteraction": "2024-01-18T15:30:00Z",
+      "createdAt": "2023-06-15T10:00:00Z"
+    }
+  }
+}
+```
+</CodeGroup>
+
+## Error Responses
+
+### Contact Not Found
+
+```json
+{
+  "data": {
+    "contactItem": null
+  }
+}
+```
+
+### Not Authorized
+
+If trying to access a contact from another organization:
+
+```json
+{
+  "errors": [
+    {
+      "message": "Not authorized to access this contact",
+      "extensions": {
+        "code": "FORBIDDEN"
+      }
+    }
+  ]
+}
+```

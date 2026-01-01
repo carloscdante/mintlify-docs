@@ -1,0 +1,183 @@
+---
+title: 'Create Feedback'
+description: 'Add a new feedback item to your organization'
+---
+
+## Mutation
+
+```graphql
+mutation {
+  addFeedbackItem(
+    apiKey: String!
+    input: NewFeedbackInput!
+  ): FeedbackItem!
+}
+```
+
+## Parameters
+
+<ParamField query="apiKey" type="string" required>
+  Your Tellscope API key
+</ParamField>
+
+<ParamField body="input" type="object" required>
+  The feedback data to create
+  <Expandable title="NewFeedbackInput">
+    <ParamField body="source" type="string" required>
+      Source identifier (e.g., `api`, `webhook`, `custom`)
+    </ParamField>
+    <ParamField body="title" type="string" required>
+      Title or subject of the feedback
+    </ParamField>
+    <ParamField body="content" type="string" required>
+      Full content of the feedback
+    </ParamField>
+    <ParamField body="author" type="string">
+      Name of the feedback author
+    </ParamField>
+    <ParamField body="email" type="string">
+      Email address of the author
+    </ParamField>
+    <ParamField body="sentiment" type="string">
+      Pre-computed sentiment: `positive`, `neutral`, or `negative`
+    </ParamField>
+    <ParamField body="metadata" type="object">
+      Additional custom metadata as JSON
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Response
+
+Returns the created `FeedbackItem`.
+
+<ResponseField name="id" type="string">Unique identifier of the created feedback</ResponseField>
+<ResponseField name="source" type="string">Source platform</ResponseField>
+<ResponseField name="title" type="string">Feedback title</ResponseField>
+<ResponseField name="content" type="string">Feedback content</ResponseField>
+<ResponseField name="author" type="string">Author name</ResponseField>
+<ResponseField name="email" type="string">Author email</ResponseField>
+<ResponseField name="sentiment" type="string">Sentiment value</ResponseField>
+<ResponseField name="status" type="string">Status (always `unread` for new feedback)</ResponseField>
+<ResponseField name="createdAt" type="datetime">Creation timestamp</ResponseField>
+
+## Example
+
+<CodeGroup>
+```graphql Mutation
+mutation {
+  addFeedbackItem(
+    apiKey: "tellscp_sk_YOUR_API_KEY"
+    input: {
+      source: "api"
+      title: "Feature Request: Export to PDF"
+      content: "It would be great if we could export reports directly to PDF format."
+      author: "Alex Johnson"
+      email: "alex@company.com"
+      sentiment: "neutral"
+      metadata: {
+        priority: "medium"
+        category: "feature_request"
+      }
+    }
+  ) {
+    id
+    title
+    status
+    createdAt
+  }
+}
+```
+
+```json Response
+{
+  "data": {
+    "addFeedbackItem": {
+      "id": "clx999xyz",
+      "title": "Feature Request: Export to PDF",
+      "status": "unread",
+      "createdAt": "2024-01-20T09:15:00Z"
+    }
+  }
+}
+```
+</CodeGroup>
+
+<CodeGroup>
+```bash cURL
+curl -X POST https://api.tellscope.io/graphql \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "mutation { addFeedbackItem(apiKey: \"tellscp_sk_YOUR_API_KEY\", input: { source: \"api\", title: \"Bug report\", content: \"Found an issue...\" }) { id } }"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.tellscope.io/graphql', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    query: `
+      mutation {
+        addFeedbackItem(
+          apiKey: "${process.env.TELLSCOPE_API_KEY}"
+          input: {
+            source: "api"
+            title: "Customer feedback"
+            content: "Love the new features!"
+            email: "customer@example.com"
+            sentiment: "positive"
+          }
+        ) {
+          id
+          createdAt
+        }
+      }
+    `
+  })
+});
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    'https://api.tellscope.io/graphql',
+    json={
+        'query': '''
+            mutation {
+                addFeedbackItem(
+                    apiKey: "tellscp_sk_YOUR_API_KEY"
+                    input: {
+                        source: "api"
+                        title: "Feedback from Python"
+                        content: "This is automated feedback"
+                    }
+                ) {
+                    id
+                }
+            }
+        '''
+    }
+)
+
+print(response.json())
+```
+</CodeGroup>
+
+## Use Cases
+
+<CardGroup cols={2}>
+  <Card title="Webhook Integration" icon="webhook">
+    Create feedback from your own webhooks and integrations
+  </Card>
+  <Card title="Import Data" icon="upload">
+    Bulk import feedback from external sources
+  </Card>
+  <Card title="Custom Forms" icon="file-lines">
+    Submit feedback from custom forms on your website
+  </Card>
+  <Card title="Mobile Apps" icon="mobile">
+    Collect in-app feedback from your mobile applications
+  </Card>
+</CardGroup>

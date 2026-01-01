@@ -1,0 +1,115 @@
+---
+title: 'Authentication'
+description: 'How to authenticate with the Tellscope API'
+---
+
+## API Key Authentication
+
+All Tellscope API requests are authenticated using an API key. Unlike traditional REST APIs that use headers, the Tellscope GraphQL API accepts the API key as a parameter in each query or mutation.
+
+## API Key Format
+
+Your API key follows this format:
+
+```
+tellscp_sk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+- Prefix: `tellscp_sk_` (identifies it as a Tellscope secret key)
+- Suffix: Unique alphanumeric identifier
+
+## Using Your API Key
+
+Pass the `apiKey` parameter in every query or mutation:
+
+```graphql
+query {
+  feedbackItems(apiKey: "tellscp_sk_YOUR_API_KEY", take: 10) {
+    items {
+      id
+      title
+    }
+    total
+  }
+}
+```
+
+```graphql
+mutation {
+  addFeedbackItem(
+    apiKey: "tellscp_sk_YOUR_API_KEY"
+    input: {
+      source: "api"
+      title: "Customer feedback"
+      content: "Great product!"
+    }
+  ) {
+    id
+  }
+}
+```
+
+## Managing Your API Key
+
+### Generate a New Key
+
+1. Log in to [Tellscope Dashboard](https://app.tellscope.io)
+2. Go to **Settings** → **API**
+3. Click **Generate API Key**
+4. Copy and store the key securely
+
+### Regenerate Key
+
+If your API key is compromised:
+
+1. Go to **Settings** → **API**
+2. Click **Revoke & Regenerate**
+3. Confirm the action
+4. Update your applications with the new key
+
+<Warning>
+  Regenerating your API key immediately invalidates the old key. All applications using the old key will stop working.
+</Warning>
+
+## Security Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Server-side only" icon="server">
+    Never expose your API key in client-side code, mobile apps, or public repositories.
+  </Card>
+  <Card title="Environment variables" icon="lock">
+    Store your API key in environment variables, not in source code.
+  </Card>
+  <Card title="Rotate regularly" icon="rotate">
+    Regenerate your API key periodically as a security measure.
+  </Card>
+  <Card title="Monitor usage" icon="chart-line">
+    Check the dashboard for unusual API activity.
+  </Card>
+</CardGroup>
+
+## Example: Secure Usage
+
+```javascript
+// ✅ Good: API key from environment variable
+const apiKey = process.env.TELLSCOPE_API_KEY;
+
+const response = await fetch('https://api.tellscope.io/graphql', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    query: `query { feedbackItems(apiKey: "${apiKey}") { items { id } } }`
+  })
+});
+```
+
+```javascript
+// ❌ Bad: Hardcoded API key
+const response = await fetch('https://api.tellscope.io/graphql', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    query: `query { feedbackItems(apiKey: "tellscp_sk_abc123...") { items { id } } }`
+  })
+});
+```
